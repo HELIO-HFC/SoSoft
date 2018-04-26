@@ -886,6 +886,7 @@ IF DISPLAY_res NE 1 AND JPEG_output EQ 1 THEN PIXMAP_method = 1
     ; Filaments description: location intensity, geometry...
     ; fill STRFIL
     ;============================================================================
+
     strfil = EFR_FIL_DESCRIBE(WHERE(im),WHERE(arrf),strfil,LONG(strpro.NAXIS1), $
              LONG(strpro.NAXIS2),DOUBLE(strpro.CDELT1),DOUBLE(strpro.CDELT2), $
              DOUBLE(strpro.CENTER_X),DOUBLE(strpro.CENTER_Y), $
