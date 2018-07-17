@@ -1,5 +1,5 @@
-@/home/fuller/IDL/FIL/Fit_Ellipse.pro
-@/home/fuller/IDL/FIL/efr_shape_lib.pro
+@/home/romagnan/IDL/FIL/Fit_Ellipse.pro
+@/home/romagnan/IDL/FIL/efr_shape_lib.pro
 
 ;THIS PRGM IS STILL UNDER DEVELOPMENT
 ;BUT CAN RUN IN THE FRAME OF EFR_FIL2ASCII.PRO TO PROVIDE FILAMENTS

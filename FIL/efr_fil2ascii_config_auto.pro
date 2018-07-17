@@ -39,7 +39,7 @@ ASCII = 1
 ; opath: path to the original file (before preprocessing, this 
 ; is optional / will be written in the ascii file)
 ;--------------------------------------------------------------------------
-  ppath = '/home/fuller/data2/FITS/Ha/PROCESSED/'
-  apath = '/home/fuller/poub/SAV/FIL/DAILY_ASCII/'
-  jpath = '/home/fuller/poub/SAV/FIL/TMPJPG/'
-  opath = '/home/fuller/data2/FITS/' 
+  ppath = '/home/romagnan/data2/FITS/Ha/PROCESSED/'
+  apath = '/home/romagnan/poub/SAV/FIL/DAILY_ASCII/'
+  jpath = '/home/romagnan/poub/SAV/FIL/TMPJPG/'
+  opath = '/home/romagnan/data2/FITS/' 

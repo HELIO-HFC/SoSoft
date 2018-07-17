@@ -33,7 +33,7 @@ FUNCTION ASCII2FIL,FILE=file,SKE=ske,BOUND=bound,IM_2K=im_2k,THICK=thick,PP_DISP
 
 
    ;### change the following path to your path (for the dialog pickfile):
-   ;path='/home/fuller/poub/SAV/FIL/DAILY_ASCII/'
+   ;path='/home/romagnan/poub/SAV/FIL/DAILY_ASCII/'
 
 
   ;### Select a file if none was specified with FILE keyword
