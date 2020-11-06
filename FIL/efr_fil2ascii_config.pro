@@ -22,7 +22,7 @@ JPEG_output = 1
 ;use dialog_pickfile (1) or use a default directory where the fits
 ;files are stored (0, directory defined below)
 
-DIALOG = 1
+DIALOG = 0
 
 ;-------------------------------------------------
 ; WRITE THE RESULTS IN ASCII FILES 
@@ -39,8 +39,8 @@ ASCII = 1
 ; opath: path to the original file (before preprocessing, this 
 ; is optional / will be written in the ascii file)
 ;--------------------------------------------------------------------------
-  ppath = '/home/romagnan/data2/FITS/Ha/PROCESSED/'
-  apath = '/home/romagnan/poub/SAV/FIL/DAILY_ASCII/'
-  jpath = '/home/romagnan/poub/SAV/FIL/TMPJPG/'
-  opath = '/home/romagnan/data2/FITS/' 
+  ppath = '/poubelle/romagnan/FITS_preprocessed/'
+  apath = '/poubelle/romagnan/CSV/'
+  jpath = '/poubelle/romagnan/jpeg/'
+  opath = '/poubelle/romagnan/FITS/' 
 

@@ -14,7 +14,7 @@ DISPLAY_res = 0
 ;---------------------------------------------------------- 
 ;summarizes the steps in one jpeg for visual inspection
 
-JPEG_output = 1
+JPEG_output = 0
 
 ;----------------------------------------------------------
 ; CHOOSE THE FILES (1) OR NOT (0) 
@@ -39,7 +39,7 @@ ASCII = 1
 ; opath: path to the original file (before preprocessing, this 
 ; is optional / will be written in the ascii file)
 ;--------------------------------------------------------------------------
-  ppath = '/home/romagnan/data2/FITS/Ha/PROCESSED/'
-  apath = '/home/romagnan/poub/SAV/FIL/DAILY_ASCII/'
-  jpath = '/home/romagnan/poub/SAV/FIL/TMPJPG/'
-  opath = '/home/romagnan/data2/FITS/' 
+  ppath = '/poubelle/romagnan/FITS_PROCESSED/'
+  apath = '/poubelle/romagnan/CSV/'
+  jpath = '/poubelle/romagnan/quicklook/'
+  opath = '/poubelle/romagnan/FITS/' 

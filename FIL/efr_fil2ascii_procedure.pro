@@ -1,11 +1,12 @@
 ;##########################################################
 ; MAIN PROGRAM FOR FILAMENT AUTOMATED RECOGNITION AND
-; DESCRIPTION
+; DESCRIPTION; THIS COPY IS PARAMETRIZED FOR AUTOMATED
+; PROCESSING ON LESIA04
 ;##########################################################
 
 ;+
 ; NAME:
-;       efr_fil2ascii / SoSoFT
+;       efr_fil2ascii_auto / SoSoFT / version for crontab
 ;
 ; PURPOSE:
 ;
@@ -26,7 +27,7 @@
 ;
 ; CALLING SEQUENCE:
 ;
-;       .r efr_fil2ascii (within SolarSoft environment)
+;       .r efr_fil2ascii_auto (within SolarSoft environment)
 ;
 ; INPUTS:
 ;    
@@ -51,7 +52,10 @@
 ;       sosoft_10_20120219T180000_meu_feat.csv [detected filaments]
 ;       sosoft_10_20120219T180000_meu_frc.csv  [feature recognition code]
 ;
-;        An optionnal Jpeg file which summarize the processing steps and results
+;        An optionnal Jpeg file which summarize the processing steps
+;        and results
+;        
+;       A quicklook png of the original preprocessed observation
 ;
 ; MODIFICATION HISTORY:
 ;
@@ -66,14 +70,64 @@
 ;    set to 1
 ;    NF 2013 add coimbra and Meudon solar tower (classical and stacking)
 ;    NF 2013 add LINEID header keyword for Meudon Solar tower stacking images
+;    NF 2014 add png quicklook of the FITS file and change fits filename in its directory
 ;    NF 2014 Put configuration parameters in an external proc
 ;-
 
-;----------------------------------------------------------
-; Execute configuration file
-;----------------------------------------------------------
 
-@efr_fil2ascii_config.pro
+pro efr_fil2ascii_procedure
+
+
+objxml = obj_new('ConfigFile')
+xml_file='./sosoft_parameters.xml'
+objxml->parsefile,xml_file
+parameters = objxml->get_struct()
+
+;------------------------------------------------------------------------------------------------------
+;         CONFIGURATION EFR_FIL2ASCII
+;------------------------------------------------------------------------------------------------------
+
+;----------------------------------------------------------
+;OPTIONAL DISPLAY (0 or 1)
+;----------------------------------------------------------
+;follow the different steps on screen
+
+DISPLAY_res = parameters.display_res
+
+;----------------------------------------------------------
+;JPEG OPTIONAL OUTPUT (0 or 1)
+;---------------------------------------------------------- 
+;summarizes the steps in one jpeg for visual inspection
+
+JPEG_output = parameters.jpeg_output
+
+;----------------------------------------------------------
+; CHOOSE THE FILES (1) OR NOT (0) 
+;----------------------------------------------------------
+;use dialog_pickfile (1) or use a default directory where the fits
+;files are stored (0, directory defined below)
+
+DIALOG = parameters.dialog
+
+;-------------------------------------------------
+; WRITE THE RESULTS IN ASCII FILES 
+;-------------------------------------------------
+; yes (1), no (0)
+  
+ASCII = parameters.ascii
+
+;-------------------------------------------------------------------------
+; DIRECTORIES
+; ppath: where the program looks for the preprocessed fits files
+; apath: path to the directory where the ascii files will be written
+; jpath: path to the directory where jpeg files will be written
+; opath: path to the original file (before preprocessing, this 
+; is optional / will be written in the ascii file)
+;--------------------------------------------------------------------------
+ppath = parameters.pp_out_path
+apath = parameters.csv_path
+jpath = parameters.quicklook_path
+opath = parameters.pp_in_path 
 
 ;----------------------------------------------------------
 ; Other parameters
@@ -96,10 +150,9 @@
     FRC_VERSION              = '1.0' ;Version of the code
     FRC_PERSON               = 'Nicolas Fuller' ;Person responsible for the feature recognition code
     FRC_CONTACT             = 'nicolas.fuller@obspm.fr' ;Contact email
-    FRC_ENC_MET             = 'CHAINCODE'; Encoding Method for the filament shape
+    FRC_ENC_MET             = 'CHAINCODE'
     FRC_FEATURE_NAME  = 'FILAMENT'
     FRC_REFERENCE        = '2005SoPh..227...61F & previ.obspm.fr/articles/SoSoftSoSoProESWW8.pdf'
-
 
 ;----------------------------------------------------------------------------------
 ;    END OF CONFIGURATION
@@ -108,7 +161,7 @@
 
 
 ;----------------------------------------------------------
-; Do not use DIALOG_PICKFILE below but 'ls' instead
+; Not use DIALOG_PICKFILE below but 'ls' instead
 ; to compute all the files in the directory
 ;----------------------------------------------------------
 
@@ -721,9 +774,9 @@ IF DISPLAY_res NE 1 AND JPEG_output EQ 1 THEN PIXMAP_method = 1
 
    IF FIX(strpro.CDELT1) EQ 0 OR FIX(strpro.CDELT2) EQ 0 OR $
              strobs.C_ROTATION EQ default THEN BEGIN
-        tmp = GET_SUN(STRTRIM(strobs.DATE_OBS,2),SD=sd,CARR=carr,PA=pa); sd=Semidiameter of disk in arc seconds.
+        tmp = GET_SUN(STRTRIM(strobs.DATE_OBS,2),SD=sd,CARR=carr,PA=pa)
         IF FIX(strpro.CDELT1) EQ 0 OR FIX(strpro.CDELT2) EQ 0 THEN BEGIN
-          strpro.CDELT1 = sd/FLOAT(strpro.R_SUN) ;R_SUN = 420.or 840pix
+          strpro.CDELT1 = sd/FLOAT(strpro.R_SUN) ;420.
           strpro.CDELT2 = strpro.CDELT1 ;(std. Sun is round)
           PRINT,'################################'
           PRINT,'no cdelt info in processed fits header !'
@@ -778,10 +831,9 @@ IF DISPLAY_res NE 1 AND JPEG_output EQ 1 THEN PIXMAP_method = 1
      strpro.PR_LOCFNAME   = pr_locfname
      strpro.ORG_FNAME       = org_fname
 
-    ;=========================================================================
-                                ; Flatten / correct lines / correct dust / Find the filaments
-    ;=========================================================================
- 
+    ;--------------------------------------------------------
+    ; Flatten/correct lines/correct dust/Find the filaments
+    ;--------------------------------------------------------
       IF DISPLAY_res EQ 1 THEN BEGIN
              arrf = EFR_FILAMENT(obst,DOUBLE(2.*strpro.R_SUN), $
              INPUT=arr,CORRECTED=corrected,/lin,/fla,/dus,/dis,MAIND=maind)
@@ -794,9 +846,6 @@ IF DISPLAY_res NE 1 AND JPEG_output EQ 1 THEN PIXMAP_method = 1
     ; Nothing detected ? -> goto next one
     ;---------------------------------------------------------
     IF (WHERE(arrf))[0] EQ -1 THEN GOTO,endloop
-
-    ;NB: this goto and the next ones could be replaced
-    ;by a loop. Only kept to avoid too much incrementations
 
     ;---------------------------------------------------------
     ; Some options above are written in strpro here
@@ -821,7 +870,6 @@ IF DISPLAY_res NE 1 AND JPEG_output EQ 1 THEN PIXMAP_method = 1
           XYOUTS,10,40,'1) Preprocessed image',/DEVICE,COLOR=150,CHARSIZE=1.4
           XYOUTS,10+hdisp,20,'2) Detected seeds',/DEVICE,COLOR=150,CHARSIZE=1.4
       ENDIF
-      arr = 0 ;free memory
       imi = 0
 
     ;--------------------------------------------------------
@@ -863,8 +911,7 @@ IF DISPLAY_res NE 1 AND JPEG_output EQ 1 THEN PIXMAP_method = 1
    ;--------------------------------------------------------
     ;OPTIONAL DISPLAY
     ;--------------------------------------------------------
-    stop
-	IF DISPLAY_res EQ 1 OR PIXMAP_method EQ 1 THEN BEGIN
+    IF DISPLAY_res EQ 1 OR PIXMAP_method EQ 1 THEN BEGIN
        imi = corrected-im*0.5*strpro.QSUN_INT
        imi[mask_comp]=MIN(imi)
        ww= WHERE(tmp,ntache)
@@ -883,10 +930,11 @@ IF DISPLAY_res NE 1 AND JPEG_output EQ 1 THEN PIXMAP_method = 1
      IF nchk EQ 0 THEN GOTO,endloop
 
 
-    ;============================================================================
+    ;--------------------------------------------------------
     ; Filaments description: location intensity, geometry...
     ; fill STRFIL
-    ;============================================================================
+    ;--------------------------------------------------------
+
     strfil = EFR_FIL_DESCRIBE(WHERE(im),WHERE(arrf),strfil,LONG(strpro.NAXIS1), $
              LONG(strpro.NAXIS2),DOUBLE(strpro.CDELT1),DOUBLE(strpro.CDELT2), $
              DOUBLE(strpro.CENTER_X),DOUBLE(strpro.CENTER_Y), $
@@ -1026,14 +1074,38 @@ IF DISPLAY_res NE 1 AND JPEG_output EQ 1 THEN PIXMAP_method = 1
       ;--------------------------------------------------------
       IF JPEG_output EQ 1 THEN BEGIN
           PRINT,'#####################'
-          PRINT,'Writing JPEG output...'
+          PRINT,'Writing JPEG quicklook of result...'
           PRINT,'#####################'
           PRINT,' '
           WRITE_JPEG,resfile7,TVRD()
       ENDIF
 
-  ;###### End of main loop ##### 
+
   endloop:
+
+  ;###### Write a PNG QUICKLOOK of the FITS even if no detection
+
+      resfile8 = jpath+datef+'__'+STRING(splitf2[0])+'_subtract_processed.png'
+      PRINT,'#####################'
+      PRINT,'Writing PNG quicklook of FITS...'
+      PRINT,'#####################'
+      PRINT,' '
+      ;WINDOW,11,XS=(SIZE(arr))[1],YS=(SIZE(arr))[2],/PIXMAP
+      ;TVSCL,arr
+      ;WRITE_PNG,resfile8,TVRD()
+      arr = 0 ;free memory
+
+  ;###### Change the name of the FITS file (to be compatible with automatic
+  ;script transfer to ftpbass2000)
+      PRINT,'#####################'
+      PRINT,'Changing name of FITS file for a temporary one...'
+      PRINT,'#####################'
+      PRINT,' '
+      newname = ppath+datef+'__'+STRING(splitf2[0])+'_subtract_processed.fits'
+      command = 'mv '+gfile+' '+newname
+      SPAWN,command
+
+  ;###### End of main loop ##### 
   ENDFOR
 
 
