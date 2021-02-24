@@ -1,8 +1,7 @@
 #! /bin/tcsh -f
 
 
-rm /poubelle/romagnan/quicklook/*
-rm /poubelle/romagnan/FITS/*
-rm /poubelle/romagnan/FITS_PROCESSED/*
-rm /poubelle/romagnan/jpeg/*
-rm /poubelle/romagnan/CSV/*
+rm $quicklook_tycho_dir/*
+rm $fits_tycho_dir/*
+rm $prepros_tycho_dir/*
+rm $csv_tycho_dir/CSV/*
