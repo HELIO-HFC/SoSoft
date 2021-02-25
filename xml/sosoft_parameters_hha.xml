@@ -1,0 +1,12 @@
+<sosoft_parameters>
+    <fits_filename>*.fits</fits_filename>
+    <pp_out_path>/home/romagnan/poubelle/romagnan/FITS_PROCESSED/</pp_out_path>
+    <pp_in_path>/home/romagnan/poubelle/romagnan/FITS/</pp_in_path>
+    <quicklook_path>/home/romagnan/poubelle/romagnan/quicklook/</quicklook_path>
+    <csv_path>/home/romagnan/poubelle/romagnan/CSV/</csv_path>
+    <im_size>1</im_size>
+    <display_res>0</display_res>
+    <jpeg_output>0</jpeg_output>
+    <dialog>0</dialog>
+    <ascii>1</ascii>    
+</sosoft_parameters>

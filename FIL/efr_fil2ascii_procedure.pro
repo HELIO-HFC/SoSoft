@@ -77,9 +77,9 @@
 
 pro efr_fil2ascii_procedure
 
-
+xml_sosoft_dir = getenv('xml_sosoft_dir')
 objxml = obj_new('ConfigFile')
-xml_file='./sosoft_parameters.xml'
+xml_file=xml_sosoft_dir+'/'+'sosoft_parameters.xml'
 objxml->parsefile,xml_file
 parameters = objxml->get_struct()
 
@@ -124,10 +124,14 @@ ASCII = parameters.ascii
 ; opath: path to the original file (before preprocessing, this 
 ; is optional / will be written in the ascii file)
 ;--------------------------------------------------------------------------
-ppath = parameters.pp_out_path
-apath = parameters.csv_path
-jpath = parameters.quicklook_path
-opath = parameters.pp_in_path 
+;ppath = parameters.pp_out_path
+ppath = getenv('prepros_tycho_dir')
+apath = getenv('csv_tycho_dir')
+jpath = getenv('quicklook_tycho_dir')
+opath = getenv('fits_tycho_dir')
+;apath = parameters.csv_path
+;jpath = parameters.quicklook_path
+;opath = parameters.pp_in_path 
 
 ;----------------------------------------------------------
 ; Other parameters
