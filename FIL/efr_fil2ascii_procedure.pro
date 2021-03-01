@@ -1089,14 +1089,15 @@ IF DISPLAY_res NE 1 AND JPEG_output EQ 1 THEN PIXMAP_method = 1
 
   ;###### Write a PNG QUICKLOOK of the FITS even if no detection
 
-      resfile8 = jpath+datef+'__'+STRING(splitf2[0])+'_subtract_processed.png'
+      ;resfile8 = jpath+datef+'__'+STRING(splitf2[0])+'_subtract_processed.png'
+      resfile8 = jpath+'/'+STRING(splitf2[0])+'_subtract_processed.png'
       PRINT,'#####################'
       PRINT,'Writing PNG quicklook of FITS...'
       PRINT,'#####################'
       PRINT,' '
-      ;WINDOW,11,XS=(SIZE(arr))[1],YS=(SIZE(arr))[2],/PIXMAP
-      ;TVSCL,arr
-      ;WRITE_PNG,resfile8,TVRD()
+      WINDOW,11,XS=(SIZE(arr))[1],YS=(SIZE(arr))[2],/PIXMAP
+      TVSCL,arr
+      WRITE_PNG,resfile8,TVRD()
       arr = 0 ;free memory
 
   ;###### Change the name of the FITS file (to be compatible with automatic
@@ -1107,7 +1108,7 @@ IF DISPLAY_res NE 1 AND JPEG_output EQ 1 THEN PIXMAP_method = 1
       PRINT,' '
       newname = ppath+datef+'__'+STRING(splitf2[0])+'_subtract_processed.fits'
       command = 'mv '+gfile+' '+newname
-      SPAWN,command
+      ;SPAWN,command
 
   ;###### End of main loop ##### 
   ENDFOR

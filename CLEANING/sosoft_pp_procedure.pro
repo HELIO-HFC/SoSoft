@@ -4,6 +4,7 @@ path_to_sosoft    = getenv('path_to_sosoft')
 fits_tycho_dir    = getenv('fits_tycho_dir')
 prepros_tycho_dir = getenv('prepros_tycho_dir')
 xml_sosoft_dir    = getenv('xml_sosoft_dir')
+quicklook_tycho_dir = getenv('quicklook_tycho_dir')
 
 ;=============================================================
 dll=path_to_sosoft+'/C_LIB/gauss.so'
@@ -14,7 +15,7 @@ linkimage, 'canny', dll2, 1, 'CannyHT'
 
 print,'preprocessing ...'
 
-objxml = obj_new('ConfigFile')
+objxml = obj_new('configfile')
 
 xml_file=xml_sosoft_dir+'/'+'sosoft_parameters.xml'
 
@@ -28,6 +29,7 @@ restore,filename=path_to_sosoft+'/CLEANING/preprocess_filament.sav',/verbose
 
 for i=0,n_elements(fits_list)-1 do begin
 	preprocess_filament,fits_list[i],parameters.im_size,prepros_tycho_dir,out_filename=out_filename
+  ;fitstopng,prepros_tycho_dir+'/'+out_filename,quicklook_tycho_dir
 endfor
 
 end
